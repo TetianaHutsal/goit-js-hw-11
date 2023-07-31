@@ -1,18 +1,22 @@
+import axios from 'axios';
 const API_KEY = '38520024-edbea968ff73ee695fee624f9';
 
 export function fetchImages(query, page, gallery) {
-    return fetch(
-      `https://pixabay.com/api/?key=${API_KEY}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=40`
+  const perPage = 20; 
+  return axios
+    .get(
+      `https://pixabay.com/api/?key=${API_KEY}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${perPage}`
     )
-      .then((response) => response.json())
-      .then((data) => {
-        return { data, gallery }; 
-      })
-      .catch((error) => {
-        console.error('Ошибка при загрузке изображений:', error);
-        return { data: { hits: [] }, gallery }; 
-      });
-  }
+    .then((response) => response.data)
+    .then((data) => {
+      return { data, gallery };
+    })
+    .catch((error) => {
+      console.error('Ошибка при загрузке изображений:', error);
+      return { data: { hits: [] }, gallery };
+    });
+}
+
   
   export function createImageCard(imageData, gallery) {
     const { webformatURL, tags, likes, views, comments, downloads } = imageData;

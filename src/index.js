@@ -42,6 +42,7 @@ function showNotification(message) {
 function showImages(result) {
   const data = result.data;
   const hits = data?.hits ?? [];
+  const totalHits = data.totalHits; 
 
   if (hits.length === 0) {
     if (page === 1) {
@@ -56,6 +57,13 @@ function showImages(result) {
     hits.forEach((image) => {
       createImageCard(image, gallery);
     });
-    loadMoreBtn.style.display = 'block';
+
+ 
+    if (hits.length >= totalHits) {
+      loadMoreBtn.style.display = 'none'; 
+      showNotification("We're sorry, but you've reached the end of search results.");
+    } else {
+      loadMoreBtn.style.display = 'block';
+    }
   }
 }
