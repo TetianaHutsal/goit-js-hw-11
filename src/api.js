@@ -12,7 +12,7 @@ export function fetchImages(query, page, gallery) {
       return { data, gallery };
     })
     .catch((error) => {
-      console.error('Ошибка при загрузке изображений:', error);
+      console.error('Image loading error', error);
       return { data: { hits: [] }, gallery };
     });
 }

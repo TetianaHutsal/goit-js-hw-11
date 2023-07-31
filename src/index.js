@@ -1,5 +1,6 @@
 import { fetchImages, createImageCard } from './api';
 import notiflix from 'notiflix';
+import SlimSelect from 'slim-select';
 
 const searchForm = document.getElementById('search-form');
 const gallery = document.querySelector('.gallery');
