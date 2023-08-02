@@ -1,6 +1,7 @@
 import { fetchImages, createImageCard } from './api';
 import notiflix from 'notiflix';
-import SlimSelect from 'slim-select';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const searchForm = document.getElementById('search-form');
 const gallery = document.querySelector('.gallery');
@@ -8,6 +9,7 @@ const loadMoreBtn = document.querySelector('.load-more');
 
 let page = 1;
 let currentQuery = '';
+let lightbox;
 
 searchForm.addEventListener('submit', handleSearch);
 
@@ -20,51 +22,71 @@ function handleSearch(event) {
   page = 1;
   gallery.innerHTML = '';
 
-  fetchImages(currentQuery, page, gallery)
+  fetchImages(currentQuery, page)
     .then(showImages)
-    .catch((error) => {
+    .catch(error => {
       console.error('Error fetching images:', error);
+      showNotification(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
     });
 }
 
-loadMoreBtn.addEventListener('click', () => {
-  page += 1;
-  fetchImages(currentQuery, page, gallery)
-    .then(showImages)
-    .catch((error) => {
-      console.error('Error fetching images:', error);
-    });
-});
+function initLightbox() {
+  if (!lightbox) {
+    lightbox = new SimpleLightbox('.gallery a', {});
+  }
+}
 
 function showNotification(message) {
   notiflix.Notify.failure(message);
 }
 
-function showImages(result) {
-  const data = result.data;
+function showImages(data) {
   const hits = data?.hits ?? [];
-  const totalHits = data.totalHits; 
+  const totalHits = data?.totalHits ?? 0;
 
-  if (hits.length === 0) {
-    if (page === 1) {
-      showNotification(
-        "Sorry, but no images were found for your request. Please try again."
-      );
-    } else {
-      showNotification("Sorry, these are the latest search results.");
-    }
-    loadMoreBtn.style.display = 'none';
-  } else {
-    hits.forEach((image) => {
-      createImageCard(image, gallery);
+  if (hits.length > 0) {
+    notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+    initLightbox();
+
+    hits.forEach(image => {
+      createImageCard(image, gallery, lightbox);
     });
 
- 
     if (hits.length >= totalHits) {
-      loadMoreBtn.style.display = 'none'; 
-      showNotification("We're sorry, but you've reached the end of search results.");
+      loadMoreBtn.style.display = 'none';
+      showNotification(
+        "We're sorry, but you've reached the end of search results."
+      );
     } else {
+      page += 1;
       loadMoreBtn.style.display = 'block';
     }
+  } else {
+    if (page === 1) {
+      showNotification(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+    } else {
+      showNotification(
+        "We're sorry, but you've reached the end of search results."
+      );
+    }
+    loadMoreBtn.style.display = 'none';
   }
 }
+
+loadMoreBtn.addEventListener('click', () => {
+  fetchImages(currentQuery, page)
+    .then(showImages)
+    .then(() => {
+      window.scrollBy({
+        top: gallery.lastElementChild.clientHeight * 2,
+        behavior: 'smooth',
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching images:', error);
+    });
+});

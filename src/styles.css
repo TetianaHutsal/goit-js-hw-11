@@ -8,13 +8,13 @@ body {
   justify-content: center;
   margin-top: 50px;
   margin-bottom: 50px;
-  margin-left: 350px;
-  margin-right: 350px;
+  margin-left: 300px;
+  margin-right: 300px;
 }
 
 .search-form input[type='text'] {
-  padding: 24px 24px;
-  font-size: 24px;
+  padding: 12px 12px;
+  font-size: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   outline: none;
@@ -22,8 +22,8 @@ body {
 }
 
 .search-form button {
-  padding: 24px 24px;
-  font-size: 24px;
+  padding: 12px 12px;
+  font-size: 20px;
   border: 1px solid #007bff;
   background-color: #007bff;
   color: #fff;
@@ -41,7 +41,7 @@ body {
 }
 
 .photo-card {
-  width: 700px;
+  width: 500px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 15px;
@@ -64,8 +64,8 @@ body {
 }
 
 .load-more {
-  padding: 24px 24px;
-  font-size: 24px;
+  padding: 12px 12px;
+  font-size: 20px;
   border: 1px solid #007bff;
   background-color: #007bff;
   color: #fff;
