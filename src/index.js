@@ -1,4 +1,5 @@
-import { fetchImages, createImageCard } from './api';
+import { fetchImages } from './api';
+import { createImageCard } from './createImageCard';
 import notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -45,14 +46,18 @@ function showNotification(message) {
 function showImages(data) {
   const hits = data?.hits ?? [];
   const totalHits = data?.totalHits ?? 0;
+  const cards = [];
 
   if (hits.length > 0) {
     notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
     initLightbox();
 
     hits.forEach(image => {
-      createImageCard(image, gallery, lightbox);
+      const card = createImageCard(image);
+      cards.push(card);
     });
+
+    gallery.append(...cards);
 
     if (hits.length >= totalHits) {
       loadMoreBtn.style.display = 'none';
